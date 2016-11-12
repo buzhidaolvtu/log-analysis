@@ -6,8 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.FileWriter;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,8 +25,8 @@ public class Analysis {
     private final static Logger logger = LoggerFactory.getLogger(Analysis.class);
 
     private final static Pattern methodStartPattern = Pattern.compile("params=");
-    private final static Pattern packagePattern = Pattern.compile("\\w+\\.\\w+\\.\\w+\\.\\w+");
     private final static Pattern methodEndPattern = Pattern.compile("return=");
+    private final static Pattern packagePattern = Pattern.compile("\\w+\\.\\w+\\.\\w+\\.\\w+");
 
     private final static Stack<DefaultMutableTreeNode> stack = new Stack<>();
 
@@ -79,37 +78,14 @@ public class Analysis {
         }
     }
 
-    public static String treeHtml() {
-        StringBuffer sb = new StringBuffer();
-        DefaultMutableTreeNode root = parseAst();
-        Enumeration enumeration = root.postorderEnumeration();
-        while (enumeration.hasMoreElements()) {
-            DefaultMutableTreeNode n = (DefaultMutableTreeNode) enumeration.nextElement();
-            MethodNode methodNode = ((MethodNode) n.getUserObject());
-            if (n.isLeaf()) {
-                sb.append("\n<li class=\"dd-item\">\n<div class=\"dd-handle\">" + methodNode.getPkg() + "\n</div>\n</li>");
-            } else if (!n.isRoot()) {
-                StringBuffer newSb = new StringBuffer();
-                newSb.append("\n<li class=\"dd-item\">\n<div class=\"dd-handle\">"+methodNode.getPkg()+"\n</div>\n<ol class=\"dd-list\">\n" + sb.toString() + "\n</ol>\n</li>");
-                sb = newSb;
-            }else if(n.isRoot()){
-                StringBuffer newSb = new StringBuffer();
-                newSb.append("<ol class=\"dd-list\">\n" + sb.toString() + "\n</ol>");
-                sb = newSb;
-            }
-
-        }
-        return sb.toString();
-    }
-
-
     private static String getPkg(String line) {
         Matcher pkgMatcher = packagePattern.matcher(line);
         while (pkgMatcher.find()) {
             String pkg = pkgMatcher.group();
-            if (pkg.contains("echoslam")) {
-                return pkg;
+            if (pkg.contains("c.b.e")) {
+                continue;
             }
+            return pkg;
         }
         logger.error("no package:{}", line);
         return "";
@@ -133,10 +109,6 @@ public class Analysis {
             return matcher.group(1);
         }
         throw new RuntimeException("no log time");
-    }
-
-    public static void main(String[] args) {
-        logger.info(treeHtml());
     }
 
 
@@ -164,5 +136,61 @@ public class Analysis {
             sb.append("-");
         }
         return sb.toString();
+    }
+
+    public static String treeHtml() {
+        StringBuffer sb = new StringBuffer();
+        DefaultMutableTreeNode root = parseAst();
+        Enumeration children = root.children();
+        if(children == null || !children.hasMoreElements()){
+            return "";
+        }else{
+            sb.append("<ol class=\"dd-list\">");
+            while(children.hasMoreElements()){
+                sb.append(traversal((DefaultMutableTreeNode) children.nextElement()));
+            }
+            sb.append("</ol>");
+        }
+
+        return sb.toString();
+    }
+
+    private static String traversal(DefaultMutableTreeNode node) {
+        Enumeration children = node.children();
+        MethodNode methodNode = (MethodNode) node.getUserObject();
+        if (children == null || !children.hasMoreElements()) {
+            return ("\n<li class=\"dd-item\">\n<div class=\"dd-handle\">" + methodNode.getPkg() + "\n</div>\n</li>\n");
+        } else {
+            StringBuffer containerSb = new StringBuffer();
+            containerSb.append("\n<li class=\"dd-item\">\n<div class=\"dd-handle\">" + methodNode.getPkg() + "\n</div>\n");
+            containerSb.append("<ol>\n");
+            while (children.hasMoreElements()) {
+                DefaultMutableTreeNode child = (DefaultMutableTreeNode) children.nextElement();
+                containerSb.append(traversal(child));
+            }
+            containerSb.append("\n</ol>\n");
+            containerSb.append("\n</li>");
+            return containerSb.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            DefaultMutableTreeNode n5 = new DefaultMutableTreeNode("n5");
+            DefaultMutableTreeNode n4 = new DefaultMutableTreeNode("n4");
+            DefaultMutableTreeNode n3 = new DefaultMutableTreeNode("n3");
+            DefaultMutableTreeNode n2 = new DefaultMutableTreeNode("n2");
+            DefaultMutableTreeNode n1 = new DefaultMutableTreeNode("n1");
+            n5.add(n1);
+            n5.add(n4);
+            n4.add(n2);
+            n4.add(n3);
+            String html = traversal(n5);
+            FileWriter fileWriter = new FileWriter("/Users/lvtu/workspace/log2/src/main/resources/web/test.html");
+            fileWriter.write(html);
+            fileWriter.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
