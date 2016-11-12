@@ -1,0 +1,88 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery.nestable.js"></script>
+    <link rel="stylesheet" type="text/css" href="jquery.nestable.css"/>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages': ['timeline']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            $.get("http://localhost:8080/timeline", function (result) {
+                var rows = [];
+                $.each(result, function (index, item) {
+                    var row = [];
+                    if (item.logStartTime == null || item.logEndTime == null) {
+                    } else {
+                        row.push(item.pkg + Math.random().toString());
+                        row.push(new Date(item.logStartTime).getTime());
+                        row.push(new Date(item.logEndTime).getTime());
+                        rows.push(row);
+                    }
+                });
+                var milli = rows[0][1];
+                rows.push(["pretend", Math.floor(milli / 1000) * 1000 + 999, Math.floor(milli / 1000 + 1) * 1000]);
+                var container = document.getElementById('timeline');
+                var chart = new google.visualization.Timeline(container);
+                var dataTable = new google.visualization.DataTable();
+
+                dataTable.addColumn({type: 'string', id: 'President'});
+                dataTable.addColumn({type: 'number', id: 'Start'});
+                dataTable.addColumn({type: 'number', id: 'End'});
+                dataTable.addRows(rows);
+
+                chart.draw(dataTable);
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="timeline" style="height: 1024px;"></div>
+<!--<div class="cf nestable-lists">-->
+    <!--<div class="dd" id="dd1">-->
+        <!--<ol class="dd-list">-->
+            <!--<li class="dd-item" data-id="root">-->
+                <!--<div class="dd-handle">root item</div>-->
+                <!--<ol class="dd-list">-->
+                    <!--<li class="dd-item" data-id="1">-->
+                        <!--<div class="dd-handle">Item 1</div>-->
+                    <!--</li>-->
+                    <!--<li class="dd-item" data-id="2">-->
+                        <!--<div class="dd-handle">Item 2</div>-->
+                    <!--</li>-->
+                    <!--<li class="dd-item" data-id="3">-->
+                        <!--<div class="dd-handle">Item 3</div>-->
+                        <!--<ol class="dd-list">-->
+                            <!--<li class="dd-item" data-id="4">-->
+                                <!--<div class="dd-handle">Item 4</div>-->
+                            <!--</li>-->
+                            <!--<li class="dd-item" data-id="5">-->
+                                <!--<div class="dd-handle">Item 5</div>-->
+                            <!--</li>-->
+                        <!--</ol>-->
+                    <!--</li>-->
+                    <!--<li class="dd-item" data-id="1">-->
+                        <!--<div class="dd-handle">Item 6</div>-->
+                    <!--</li>-->
+                    <!--<li class="dd-item" data-id="2">-->
+                        <!--<div class="dd-handle">Item 7</div>-->
+                    <!--</li>-->
+                <!--</ol>-->
+            <!--</li>-->
+
+        <!--</ol>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="dd">
+
+</div>
+<script>
+//    $('#dd1').nestable({/* config options */});
+    $.get("http://localhost:8080/tree", function (htmlStr) {
+        $('.dd').html(htmlStr);
+        $('.dd').nestable({/* config options */});
+    });
+</script>
+</body>
+</html>
