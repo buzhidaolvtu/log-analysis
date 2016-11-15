@@ -1,7 +1,11 @@
 package cn.boxfish.log2.analysis;
 
+import cn.boxfish.log2.storage.log.LogRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.stereotype.Component;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.BufferedReader;
@@ -16,10 +20,12 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by lvtu on 2016/11/11.
  */
+@Component
 public class Analysis {
 
     private final static Logger logger = LoggerFactory.getLogger(Analysis.class);
@@ -30,25 +36,27 @@ public class Analysis {
 
     private final static Stack<DefaultMutableTreeNode> stack = new Stack<>();
 
-    public static List<MethodNode> parse() {
-        DefaultMutableTreeNode root = parseAst();
-        logRoot(root);
-        return preorderToList(root);
+    @Autowired
+    private MongoOperations mongoOperations;
 
+    private List<String> getDataFromDb() {
+        List<LogRecord> all = mongoOperations.findAll(LogRecord.class);
+        return all.stream().map(logRecord -> logRecord.getLine()).collect(Collectors.toList());
     }
 
-    private static DefaultMutableTreeNode parseAst() {
+    public List<MethodNode> parse() {
+        DefaultMutableTreeNode root = parseAst(getDataFromDb());
+        logRoot(root);
+        return preorderToList(root);
+    }
+
+    private static DefaultMutableTreeNode parseAst(List<String> lines) {
         try {
             MethodNode rootMethodNode = new MethodNode("root");
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootMethodNode);
             stack.push(root);
 
-            URL resource = Analysis.class.getClassLoader().getResource("log2.log");
-            Path path = Paths.get(resource.toURI());
-            FileReader fileReader = new FileReader(path.toFile());
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
+            lines.stream().forEach(line -> {
                 Matcher methodStartMatcher = methodStartPattern.matcher(line);
                 if (methodStartMatcher.find()) {
                     String pkg = getPkg(line);
@@ -70,7 +78,7 @@ public class Analysis {
                     methodNode.setCost(Long.valueOf(getCostTime(line)));
                     methodNode.setLogEndTime(getlogTime(line));
                 }
-            }
+            });
             return root;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,15 +146,15 @@ public class Analysis {
         return sb.toString();
     }
 
-    public static String treeHtml() {
+    public String treeHtml() {
         StringBuffer sb = new StringBuffer();
-        DefaultMutableTreeNode root = parseAst();
+        DefaultMutableTreeNode root = parseAst(getDataFromDb());
         Enumeration children = root.children();
-        if(children == null || !children.hasMoreElements()){
+        if (children == null || !children.hasMoreElements()) {
             return "";
-        }else{
+        } else {
             sb.append("<ol class=\"dd-list\">");
-            while(children.hasMoreElements()){
+            while (children.hasMoreElements()) {
                 sb.append(traversal((DefaultMutableTreeNode) children.nextElement()));
             }
             sb.append("</ol>");

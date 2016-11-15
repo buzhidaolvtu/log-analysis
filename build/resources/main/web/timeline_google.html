@@ -5,7 +5,7 @@
     <script type="text/javascript" src="jquery.nestable.js"></script>
     <link rel="stylesheet" type="text/css" href="jquery.nestable.css"/>
     <script type="text/javascript">
-        google.charts.load('current', {'packages': ['timeline']});
+        google.charts.load('current', {'packages':['timeline']});
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             $.get("http://localhost:8080/timeline", function (result) {
@@ -37,11 +37,10 @@
     </script>
 </head>
 <body>
-<div id="timeline" style="height: 1024px;"></div>
-
 <div class="cf nestable-lists">
     <div class="dd" id="callstack"></div>
 </div>
+<div id="timeline" style="height: 1024px;"></div>
 
 <script>
     $('#dd1').nestable({/* config options */});
