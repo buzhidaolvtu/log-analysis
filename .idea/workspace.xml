@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c47aa45a-90b4-468b-9ec6-186ce0fa096b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/classes/main/cn/boxfish/log2/controller/TimelineController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/web/test.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/web/timeline.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/web/tree.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/resources/main/web/timeline_google.html" afterPath="$PROJECT_DIR$/build/resources/main/web/timeline_google.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/boxfish/log2/controller/TimelineController.java" afterPath="$PROJECT_DIR$/src/main/java/cn/boxfish/log2/controller/TimelineController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/web/timeline_google.html" afterPath="$PROJECT_DIR$/src/main/resources/web/timeline_google.html" />
     </list>
     <ignored path="log2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,7 +46,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Analysis.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Analysis.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/cn/boxfish/log2/analysis/Analysis.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="126">
@@ -74,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="timeline_google.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="timeline_google.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/web/timeline_google.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
-              <caret line="55" column="11" selection-start-line="55" selection-start-column="11" selection-end-line="55" selection-end-column="11" />
+            <state relative-caret-position="-252">
+              <caret line="8" column="58" selection-start-line="8" selection-start-column="58" selection-end-line="8" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -133,16 +132,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="18">
               <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Application.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cn/boxfish/log2/Application.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="17" column="64" selection-start-line="17" selection-start-column="64" selection-end-line="17" selection-end-column="64" />
               <folding />
             </state>
           </provider>
@@ -1485,7 +1474,7 @@
       <workItem from="1478756305549" duration="33446000" />
       <workItem from="1478848352889" duration="18657000" />
       <workItem from="1478929246602" duration="10888000" />
-      <workItem from="1479092489343" duration="28776000" />
+      <workItem from="1479092489343" duration="29141000" />
     </task>
     <task id="LOCAL-00001" summary="日志分析">
       <created>1478940145287</created>
@@ -1515,7 +1504,14 @@
       <option name="project" value="LOCAL" />
       <updated>1479267420566</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="日志分析">
+      <created>1479276315265</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1479276315265</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1536,7 +1532,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91767000" />
+    <option name="totallyTimeSpent" value="92132000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1612,22 +1608,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.1.7/15a62dbee75aadf62b7d35640533262d764b29d3/logback-core-1.1.7-sources.jar!/ch/qos/logback/core/Layout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.1.7/15a62dbee75aadf62b7d35640533262d764b29d3/logback-core-1.1.7-sources.jar!/ch/qos/logback/core/net/SMTPAppenderBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="315" column="29" selection-start-line="315" selection-start-column="19" selection-end-line="315" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.1.7/6cfaf5c02fb50bfdf7ea5e563955d3c229d7e154/logback-classic-1.1.7-sources.jar!/ch/qos/logback/classic/net/SMTPAppender.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
@@ -2053,8 +2033,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/web/timeline_google.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="55" column="11" selection-start-line="55" selection-start-column="11" selection-end-line="55" selection-end-column="11" />
+        <state relative-caret-position="-252">
+          <caret line="8" column="58" selection-start-line="8" selection-start-column="58" selection-end-line="8" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/timeline.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-342">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/test.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-171">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
