@@ -8,12 +8,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Component;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -21,6 +16,9 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
  * Created by lvtu on 2016/11/11.
@@ -39,13 +37,13 @@ public class Analysis {
     @Autowired
     private MongoOperations mongoOperations;
 
-    private List<String> getDataFromDb() {
-        List<LogRecord> all = mongoOperations.findAll(LogRecord.class);
+    private List<String> getDataFromDb(String tId) {
+        List<LogRecord> all = mongoOperations.find(query(where("tId").is(tId)), LogRecord.class);
         return all.stream().map(logRecord -> logRecord.getLine()).collect(Collectors.toList());
     }
 
-    public List<MethodNode> parse() {
-        DefaultMutableTreeNode root = parseAst(getDataFromDb());
+    public List<MethodNode> parse(String tId) {
+        DefaultMutableTreeNode root = parseAst(getDataFromDb(tId));
         logRoot(root);
         return preorderToList(root);
     }
@@ -146,9 +144,9 @@ public class Analysis {
         return sb.toString();
     }
 
-    public String treeHtml() {
+    public String treeHtml(String tId) {
         StringBuffer sb = new StringBuffer();
-        DefaultMutableTreeNode root = parseAst(getDataFromDb());
+        DefaultMutableTreeNode root = parseAst(getDataFromDb(tId));
         Enumeration children = root.children();
         if (children == null || !children.hasMoreElements()) {
             return "";

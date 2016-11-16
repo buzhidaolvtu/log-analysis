@@ -11,12 +11,14 @@ public class LogRecord {
     private String loggerName;
     private String content;
     private String line;
+    private String tId;
 
     public static LogRecord of(String time,
                                String thread,
                                String level,
                                String loggerName,
                                String content,
+                               String tId,
                                String line){
         LogRecord l = new LogRecord();
         l.time = time;
@@ -24,6 +26,7 @@ public class LogRecord {
         l.level = level;
         l.loggerName = loggerName;
         l.content = content;
+        l.tId = tId;
         l.line = line;
         return l;
     }
@@ -84,16 +87,25 @@ public class LogRecord {
         this.line = line;
     }
 
+    public String gettId() {
+        return tId;
+    }
+
+    public void settId(String tId) {
+        this.tId = tId;
+    }
+
     @Override
     public String toString() {
-        return "LogAnalysis{" +
-                "id=" + id +
+        return "LogRecord{" +
+                "id='" + id + '\'' +
                 ", time='" + time + '\'' +
                 ", thread='" + thread + '\'' +
                 ", level='" + level + '\'' +
                 ", loggerName='" + loggerName + '\'' +
                 ", content='" + content + '\'' +
                 ", line='" + line + '\'' +
+                ", tId='" + tId + '\'' +
                 '}';
     }
 }

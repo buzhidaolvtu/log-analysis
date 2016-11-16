@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,23 +36,29 @@ public class LogPipeline {
 
     private final static Pattern pattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) (\\[(\\w|-)+\\]) (INFO|ERROR|WARN|DEBUG|TRACE)  ((\\w|\\.|\\(|\\))+) (.+)");
 
+    private final static Pattern tIdPattern = Pattern.compile("t_id=(\\d+)");
+    public static String get_tId(String line){
+        Matcher matcher = tIdPattern.matcher(line);
+        if(matcher.find()){
+            return matcher.group(1);
+        }
+        return "";
+    }
 
-    private ArrayBlockingQueue<LogRecord> buffer = new ArrayBlockingQueue<LogRecord>(5);
+    private ArrayBlockingQueue<LogRecord> buffer = new ArrayBlockingQueue<LogRecord>(1000);
 
 
-    public void transform(String line) {
+    public void transform(InputStream in) {
+        BufferedReader bufferedReader = null;
         try {
-            URL resource = Analysis.class.getClassLoader().getResource("log2.log");
-            Path path = Paths.get(resource.toURI());
-            FileReader fileReader = new FileReader(path.toFile());
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            bufferedReader = new BufferedReader(new InputStreamReader(in));
 
             String time = null;
             String thread = null;
             String level = null;
             String loggerName = null;
             String content = null;
-
+            String line = null;
             while ((line = bufferedReader.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
@@ -60,7 +68,7 @@ public class LogPipeline {
                     loggerName = matcher.group(5);
                     content = matcher.group(7);
                     LogRecord logRecord = LogRecord.of(time,
-                            thread, level, loggerName, content, line);
+                            thread, level, loggerName, content, get_tId(line),line);
                     logger.info("time:{},thread:{},level:{},loggerName:{},content:{}", time, thread, level, loggerName, content);
                     fillBuffer(logRecord);
                 }
@@ -69,6 +77,14 @@ public class LogPipeline {
             flush();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (bufferedReader != null) {
+                try{
+                    bufferedReader.close();
+                }catch (Exception e){
+                    //ignore ex
+                }
+            }
         }
     }
 
@@ -80,7 +96,7 @@ public class LogPipeline {
 
     private void sendBuffer() {
         if (!buffer.isEmpty()) {
-            mongoOperations.insert(buffer,LogRecord.class);
+            mongoOperations.insert(buffer, LogRecord.class);
             buffer.clear();
         }
     }

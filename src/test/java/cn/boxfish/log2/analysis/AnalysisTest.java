@@ -13,14 +13,7 @@ public class AnalysisTest {
 
     @Test
     public void treeHtml() {
-        try {
-            String html = Analysis.treeHtml();
-            FileWriter fileWriter = new FileWriter("/Users/lvtu/workspace/log2/src/test/resources/tree.html");
-            fileWriter.write(html);
-            fileWriter.flush();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 
 }

@@ -1,6 +1,5 @@
 package cn.boxfish.log2;
 
-import cn.boxfish.log2.storage.LogPipeline;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,8 +13,9 @@ public class Application {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-        LogPipeline bean = context.getBean(LogPipeline.class);
-        bean.transform(null);
-
+//        File file = new File("/Users/lvtu/Desktop/temp/earthshaker_log/earthshaker.2016-11-15.0.log.gz");
+//        InputStream uncompress = UncompressUtils.uncompress(file);
+//        LogPipeline bean = context.getBean(LogPipeline.class);
+//        bean.transform(uncompress);
     }
 }
