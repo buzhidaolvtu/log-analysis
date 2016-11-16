@@ -1,53 +1,61 @@
 <html>
 <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="jquery.nestable.js"></script>
     <link rel="stylesheet" type="text/css" href="jquery.nestable.css"/>
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['timeline']});
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-            $.get("http://localhost:8080/timeline", function (result) {
-                var rows = [];
-                $.each(result, function (index, item) {
-                    var row = [];
-                    if (item.logStartTime == null || item.logEndTime == null) {
-                    } else {
-                        row.push(item.pkg + Math.random().toString());
-                        row.push(new Date(item.logStartTime).getTime());
-                        row.push(new Date(item.logEndTime).getTime());
-                        rows.push(row);
-                    }
-                });
-                var milli = rows[0][1];
-                rows.push(["pretend", Math.floor(milli / 1000) * 1000 + 999, Math.floor(milli / 1000 + 1) * 1000]);
-                var container = document.getElementById('timeline');
-                var chart = new google.visualization.Timeline(container);
-                var dataTable = new google.visualization.DataTable();
+    <!--<script type="text/javascript">-->
+        <!--google.charts.load('current', {'packages':['timeline']});-->
+        <!--google.charts.setOnLoadCallback(drawChart);-->
+        <!--function drawChart() {-->
+            <!--$.get("http://localhost:8080/timeline", function (result) {-->
+                <!--var rows = [];-->
+                <!--$.each(result, function (index, item) {-->
+                    <!--var row = [];-->
+                    <!--if (item.logStartTime == null || item.logEndTime == null) {-->
+                    <!--} else {-->
+                        <!--row.push(item.pkg + Math.random().toString());-->
+                        <!--row.push(new Date(item.logStartTime).getTime());-->
+                        <!--row.push(new Date(item.logEndTime).getTime());-->
+                        <!--rows.push(row);-->
+                    <!--}-->
+                <!--});-->
+                <!--var milli = rows[0][1];-->
+                <!--rows.push(["pretend", Math.floor(milli / 1000) * 1000 + 999, Math.floor(milli / 1000 + 1) * 1000]);-->
+                <!--var container = document.getElementById('timeline');-->
+                <!--var chart = new google.visualization.Timeline(container);-->
+                <!--var dataTable = new google.visualization.DataTable();-->
 
-                dataTable.addColumn({type: 'string', id: 'President'});
-                dataTable.addColumn({type: 'number', id: 'Start'});
-                dataTable.addColumn({type: 'number', id: 'End'});
-                dataTable.addRows(rows);
+                <!--dataTable.addColumn({type: 'string', id: 'President'});-->
+                <!--dataTable.addColumn({type: 'number', id: 'Start'});-->
+                <!--dataTable.addColumn({type: 'number', id: 'End'});-->
+                <!--dataTable.addRows(rows);-->
 
-                chart.draw(dataTable);
-            });
-        }
-    </script>
+                <!--chart.draw(dataTable);-->
+            <!--});-->
+        <!--}-->
+    <!--</script>-->
 </head>
 <body>
+<label for="tId">tId:</label> <input typ="text" id="tId"><button id="query">查询</button><br>
 <div class="cf nestable-lists">
     <div class="dd" id="callstack"></div>
 </div>
-<div id="timeline" style="height: 1024px;"></div>
+<!--<div id="timeline" style="height: 1024px;"></div>-->
 
 <script>
-    $('#dd1').nestable({/* config options */});
-    $.get("http://localhost:8080/tree", function (htmlStr) {
-        $('#callstack').html(htmlStr);
-        $('#callstack').nestable({/* config options */});
-    });
+    $('#callstack').nestable({/* config options */});
+    $("#query").on('click',function(){
+        var data = {tId:$("#tId").val()};
+        if(data.tId == "" || data.tId == null){
+            alert("please input the tId.");
+        }
+        $.get("http://localhost:8080/tree",data,function (htmlStr) {
+            $('#callstack').html(htmlStr);
+            $('#callstack').nestable('init');
+        });
+    })
+
 </script>
 </body>
 </html>

@@ -26,8 +26,8 @@ public class TimelineController {
     }
 
     @RequestMapping(value = "/tree")
-    public String tree(){
-        return analysis.treeHtml("14792058368991761");
+    public String tree(String tId){
+        return analysis.treeHtml(tId);
     }
 
     @RequestMapping(value = "/pipeline")
