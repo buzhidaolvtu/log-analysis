@@ -1,13 +1,16 @@
 package cn.boxfish.log2.controller;
 
 import cn.boxfish.log2.analysis.Analysis;
+import cn.boxfish.log2.service.FileNameServiceImpl;
 import cn.boxfish.log2.service.directory.Directory;
-import cn.boxfish.log2.storage.LogPipeline;
+import cn.boxfish.log2.storage.LabelAndStoreLog;
+import cn.boxfish.log2.utils.UncompressUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,33 +21,37 @@ import java.util.stream.Collectors;
 @CrossOrigin
 public class TimelineController {
 
+    private final static String dir = "/Users/lvtu/Desktop/temp/earthshaker_log";
+
+    @Autowired
+    private FileNameServiceImpl fileNameService;
+
     @Autowired
     private Analysis analysis;
 
     @Autowired
-    private LogPipeline logPipeline;
-
-    @RequestMapping(value = "/timeline")
-    public Object analyzeTimeline(){
-        return analysis.parse("14792058368991761");
-    }
+    private LabelAndStoreLog labelAndStoreLog;
 
     @RequestMapping(value = "/tree")
-    public String tree(String tId){
-        return analysis.treeHtml(tId);
+    public String tree(String filename, String tId) {
+        String fullpathName = dir + "/" + filename;
+        String fileIdAsCollectionName = fileNameService.fileId(fullpathName);
+        return analysis.treeHtml(fileIdAsCollectionName,tId);
     }
 
-    @RequestMapping(value = "/pipeline")
-    public String store(){
-        logPipeline.transform(null);
+    @RequestMapping(value = "/buildIndex")
+    public String buildIndex(String filename) {
+        String fullpathName = dir + "/" + filename;
+        File file = new File(fullpathName);
+        String fileIdAsCollectionName = fileNameService.fileId(fullpathName);
+        labelAndStoreLog.transform(UncompressUtils.uncompress(file), fileIdAsCollectionName);
         return "success";
     }
 
     @RequestMapping(value = "/directory")
-    public List<String> directory(){
-        List<String> stringList = Directory.traversalDir("/Users/lvtu/Desktop/temp/earthshaker_log");
-        List<String> fileList = stringList.stream().filter(filename -> filename.endsWith("gz")).collect(Collectors.toList());
-        return fileList;
+    public List<String> directory() {
+        List<String> stringList = Directory.traversalDir(dir);
+        return stringList.stream().filter(filename -> filename.endsWith("gz")).collect(Collectors.toList());
     }
 
 }

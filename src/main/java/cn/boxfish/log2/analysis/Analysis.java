@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Component;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -37,13 +36,13 @@ public class Analysis {
     @Autowired
     private MongoOperations mongoOperations;
 
-    private List<String> getDataFromDb(String tId) {
-        List<LogRecord> all = mongoOperations.find(query(where("tId").is(tId)), LogRecord.class);
+    private List<String> getDataFromDb(String collection, String tId) {
+        List<LogRecord> all = mongoOperations.find(query(where("tId").is(tId)), LogRecord.class, collection);
         return all.stream().map(logRecord -> logRecord.getLine()).collect(Collectors.toList());
     }
 
-    public List<MethodNode> parse(String tId) {
-        DefaultMutableTreeNode root = parseAst(getDataFromDb(tId));
+    public List<MethodNode> parse(String collection, String tId) {
+        DefaultMutableTreeNode root = parseAst(getDataFromDb(collection, tId));
         logRoot(root);
         return preorderToList(root);
     }
@@ -144,9 +143,9 @@ public class Analysis {
         return sb.toString();
     }
 
-    public String treeHtml(String tId) {
+    public String treeHtml(String collection, String tId) {
         StringBuffer sb = new StringBuffer();
-        DefaultMutableTreeNode root = parseAst(getDataFromDb(tId));
+        DefaultMutableTreeNode root = parseAst(getDataFromDb(collection, tId));
         Enumeration children = root.children();
         if (children == null || !children.hasMoreElements()) {
             return "";
@@ -180,23 +179,4 @@ public class Analysis {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            DefaultMutableTreeNode n5 = new DefaultMutableTreeNode("n5");
-            DefaultMutableTreeNode n4 = new DefaultMutableTreeNode("n4");
-            DefaultMutableTreeNode n3 = new DefaultMutableTreeNode("n3");
-            DefaultMutableTreeNode n2 = new DefaultMutableTreeNode("n2");
-            DefaultMutableTreeNode n1 = new DefaultMutableTreeNode("n1");
-            n5.add(n1);
-            n5.add(n4);
-            n4.add(n2);
-            n4.add(n3);
-            String html = traversal(n5);
-            FileWriter fileWriter = new FileWriter("/Users/lvtu/workspace/log2/src/main/resources/web/test.html");
-            fileWriter.write(html);
-            fileWriter.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
