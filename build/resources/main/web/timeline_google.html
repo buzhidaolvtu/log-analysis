@@ -9,6 +9,7 @@
         <thead>
         <tr>
             <th>文件名</th>
+            <th>处理状态</th>
             <th>处理</th>
             <th>t_id</th>
             <th>查询</th>
@@ -17,49 +18,17 @@
         <tbody>
         {{#each rows}}
         <tr class="data-row">
-        <tr>
-            <td>{{filename}}</td>
-            <td>xxx</td>
-            <td><input type="text"/></td>
-            <td>
-                <button>查询</button>
+            <td class="filename">{{filename}}</td>
+            <td>未处理</td>
+            <td><button class="process">处理</button></td>
+            <td class="t_id"><input type="text"/></td>
+            <td class="query_t_id">
+                <button class="query">查询</button>
             </td>
-        </tr>
         </tr>
         {{/each}}
         </tbody>
     </script>
-    <!--<script type="text/javascript">-->
-    <!--google.charts.load('current', {'packages':['timeline']});-->
-    <!--google.charts.setOnLoadCallback(drawChart);-->
-    <!--function drawChart() {-->
-    <!--$.get("http://localhost:8080/timeline", function (result) {-->
-    <!--var rows = [];-->
-    <!--$.each(result, function (index, item) {-->
-    <!--var row = [];-->
-    <!--if (item.logStartTime == null || item.logEndTime == null) {-->
-    <!--} else {-->
-    <!--row.push(item.pkg + Math.random().toString());-->
-    <!--row.push(new Date(item.logStartTime).getTime());-->
-    <!--row.push(new Date(item.logEndTime).getTime());-->
-    <!--rows.push(row);-->
-    <!--}-->
-    <!--});-->
-    <!--var milli = rows[0][1];-->
-    <!--rows.push(["pretend", Math.floor(milli / 1000) * 1000 + 999, Math.floor(milli / 1000 + 1) * 1000]);-->
-    <!--var container = document.getElementById('timeline');-->
-    <!--var chart = new google.visualization.Timeline(container);-->
-    <!--var dataTable = new google.visualization.DataTable();-->
-
-    <!--dataTable.addColumn({type: 'string', id: 'President'});-->
-    <!--dataTable.addColumn({type: 'number', id: 'Start'});-->
-    <!--dataTable.addColumn({type: 'number', id: 'End'});-->
-    <!--dataTable.addRows(rows);-->
-
-    <!--chart.draw(dataTable);-->
-    <!--});-->
-    <!--}-->
-    <!--</script>-->
 </head>
 <body>
 <table id="fileList">
@@ -72,7 +41,6 @@
 <div class="cf nestable-lists">
     <div class="dd" id="callstack"></div>
 </div>
-<!--<div id="timeline" style="height: 1024px;"></div>-->
 
 <script>
     $('#callstack').nestable({/* config options */});
@@ -85,18 +53,38 @@
             $('#callstack').html(htmlStr);
             $('#callstack').nestable('init');
         });
-    })
+    });
+
+    function bindTableEvent(){
+        $("#fileList").on('click','button.process',function (event) {
+            var _td = $(this).closest('tr').find(".filename");
+            var filename = _td.text();
+            $.get("http://localhost:8080/buildIndex",{filename:filename},function () {
+
+            });
+        });
+
+        $("#fileList").on('click','button.query',function (event) {
+            var _td = $(this).closest('tr').find(".filename");
+            var filename = _td.text();
+        });
+    }
 
     $(function () {
         $.get("http://localhost:8080/directory", function (filelist) {
             if ($.isArray(filelist)) {
                 var source = $("#filelist-template").html();
                 var template = Handlebars.compile(source);
-                var context = {rows:filelist};
+                var rows = [];
+                $.each(filelist,function (index,value) {
+                    rows.push({filename:value});
+                })
+                var context = {rows:rows};
                 var html = template(context);
                 $("#fileList").html(html);
             }
-        })
+        });
+        bindTableEvent();
     });
 
 </script>

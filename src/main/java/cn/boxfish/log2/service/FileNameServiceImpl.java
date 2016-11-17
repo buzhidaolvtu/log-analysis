@@ -37,7 +37,12 @@ public class FileNameServiceImpl {
         Map<String, String> map = new HashMap<>();
         map.put("fullpath", fullpath);
         map.put("file_id", fileId);
-        mongoOperations.insert(map);
+        map.put("state", "0");
+        mongoOperations.insert(map,fileToIdentity);
         return fileId;
+    }
+
+    public void mark(String fullpath){
+
     }
 }
