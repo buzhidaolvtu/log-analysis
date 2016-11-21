@@ -7,12 +7,7 @@ import java.util.Vector;
  * Created by lvtu on 2016/11/19.
  * 1.每一个内部节点的索引不会相同:K1<K2<K3...Kn
  * 2.子节点的索引Ki <CK1<CK2<...<CKn< Ki+1
- *
- * 因为所有索引数据的索引都不相同(相同索引数据归一为同一数据),
- * 如 【1,2,3】4【5,6,7】8【9,10,11】
- * 索引:            4        8
- * 索引:    1,2,3     5,6,7    9,10,11
- * 数据:    1,2,3,4   5,6,7,8  9,10,11(4和8索引的数据存储在数据节点中)
+ * <p>
  */
 public class BPlusTree<K extends Comparable<K>, V> {
 
@@ -70,14 +65,23 @@ public class BPlusTree<K extends Comparable<K>, V> {
     }
 
     //删除索引是k的数据
-    public void BPlusTree_delete(K k) {
+    public V BPlusTree_delete(K k) {
         if (root == null) {
-            return;
+            return null;
         }
         LeafNode dataNode = findDataNode(root, k);
-
+        dataNode.remove(k);
+        rebalance(dataNode);
+        //TODO 索引分隔符可能被删除
+        return null;
     }
 
+    private void rebalance(LeafNode leafNode) {
+        if (leafNode.numberOfKeys() < minKeySize) {
+            //遍历该节点是父节点的第几个孩子
+            //TODO
+        }
+    }
 
     public void BPlusTree_insert(K k, V v) {
         if (root == null) {
@@ -105,7 +109,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         K medialKey = (K) (nodeToSplit.getKey(medialIndex));
 
         Node left = new Node(maxKeySize, maxChildrenSize, null);
-        for (int i = 0; i < medialIndex; i++) {//// TODO: 2016/11/21 这里不能<=medialIndex
+        for (int i = 0; i < medialIndex; i++) {//// TODO: 2016/11/21 这里不能<=medialIndex?加上等号之后,无法分配孩子节点。
             left.addKey(nodeToSplit.getKey(i));
         }
 
@@ -182,6 +186,10 @@ public class BPlusTree<K extends Comparable<K>, V> {
             this.childrenSize = 0;
         }
 
+        public K getGreatestKey() {
+            return keys[keysSize - 1];
+        }
+
         public void addKey(K key) {
             keys[keysSize] = key;
             keysSize++;
@@ -212,6 +220,15 @@ public class BPlusTree<K extends Comparable<K>, V> {
 
         public boolean isLeaf() {
             return false;
+        }
+
+        public int indexOf(Node child) {
+            for (int i = 0; i < childrenSize; i++) {
+                if (children[i] == child) {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 
