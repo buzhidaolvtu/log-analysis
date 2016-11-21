@@ -6,12 +6,15 @@ import java.util.Vector;
 /**
  * Created by lvtu on 2016/11/19.
  * 1.每一个内部节点的索引不会相同:K1<K2<K3...Kn
- * 2.子节点的索引Ki <CK1<CK2<...<CKn<= Ki+1
+ * 2.子节点的索引Ki <CK1<CK2<...<CKn< Ki+1
+ *
+ * 因为所有索引数据的索引都不相同(相同索引数据归一为同一数据),
+ * 如 【1,2,3】4【5,6,7】8【9,10,11】
+ * 索引:            4        8
+ * 索引:    1,2,3     5,6,7    9,10,11
+ * 数据:    1,2,3,4   5,6,7,8  9,10,11(4和8索引的数据存储在数据节点中)
  */
 public class BPlusTree<K extends Comparable<K>, V> {
-
-    //这里指最多order个keys。
-    private int order;
 
     // Default to 2-3 Tree
     private int minKeySize = 1;
@@ -26,6 +29,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
     }
 
     public BPlusTree(int order) {
+        //TODO
         this.minKeySize = order;
         this.minChildrenSize = minKeySize + 1;
         this.maxKeySize = 2 * minKeySize;
@@ -71,28 +75,21 @@ public class BPlusTree<K extends Comparable<K>, V> {
             return;
         }
 
-        if (root.isLeaf()) {
-            LeafNode node = (LeafNode) root;
-            for (int i = 0; i < node.numberOfKeys(); i++) {
-                if (k.compareTo((K) (node.getKey(i))) == 0) {
-                    node.remove(k);
-                    //如果小于最小key数,就合并
-                    break;
-                }
-            }
-        }
+        LeafNode dataNode = findDataNode(root, k);
+
     }
+
 
     public void BPlusTree_insert(K k, V v) {
         if (root == null) {
-            LeafNode<K, V> leafNode = new LeafNode<K, V>(order, null);
+            LeafNode<K, V> leafNode = new LeafNode<K, V>(maxKeySize, null);
             leafNode.add(k, v);
             root = leafNode;
         } else {
             //寻找数据节点LeafNode
             LeafNode dataNode = findDataNode(root, k);
             dataNode.add(k, v);
-            if (dataNode.numberOfKeys() > order) {
+            if (dataNode.numberOfKeys() > maxKeySize) {
                 splitLeafNode(dataNode);
             }
         }
@@ -105,11 +102,11 @@ public class BPlusTree<K extends Comparable<K>, V> {
      */
     private void splitInternalNode(Node nodeToSplit) {
         int numberOfKeys = nodeToSplit.numberOfKeys();
-        int medialIndex = numberOfKeys / 2;
+        int medialIndex = numberOfKeys / 2;//TODO
         K medialKey = (K) (nodeToSplit.getKey(medialIndex));
 
         Node left = new Node(maxKeySize, maxChildrenSize, null);
-        for (int i = 0; i <= medialIndex; i++) {
+        for (int i = 0; i < medialIndex; i++) {//// TODO: 2016/11/21 这里不能<=medialIndex
             left.addKey(nodeToSplit.getKey(i));
         }
 
@@ -129,7 +126,8 @@ public class BPlusTree<K extends Comparable<K>, V> {
         right.parent = parentOfNodeToSplit;
         parentOfNodeToSplit.addChild(left);
         parentOfNodeToSplit.addChild(right);
-        if (parentOfNodeToSplit.numberOfKeys() >= order) {
+        parentOfNodeToSplit.addKey(medialKey);
+        if (parentOfNodeToSplit.numberOfKeys() > maxKeySize) {
             splitInternalNode(parentOfNodeToSplit);
         }
     }
@@ -161,7 +159,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         parentOfNodeToSplit.addChild(left);
         parentOfNodeToSplit.addChild(right);
         parentOfNodeToSplit.addKey(medialKey);
-        if (parentOfNodeToSplit.numberOfKeys() >= order) {
+        if (parentOfNodeToSplit.numberOfKeys() > maxKeySize) {
             splitInternalNode(parentOfNodeToSplit);
         }
     }
