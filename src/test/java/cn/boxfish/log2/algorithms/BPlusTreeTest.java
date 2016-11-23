@@ -1,5 +1,6 @@
 package cn.boxfish.log2.algorithms;
 
+import com.google.common.base.Strings;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -21,18 +22,16 @@ public class BPlusTreeTest {
 
     @Test
     public void BPlusTree_insert() throws Exception {
-        BPlusTree<String, String> bPlusTree = new BPlusTree<>(4);
-        bPlusTree.BPlusTree_insert("key1","value1");
-        bPlusTree.BPlusTree_insert("key2","value2");
-        bPlusTree.BPlusTree_insert("key3","value3");
-        bPlusTree.BPlusTree_insert("key4","value4");
-        bPlusTree.BPlusTree_insert("key5","value5");
-        bPlusTree.BPlusTree_insert("key6","value6");
-        bPlusTree.BPlusTree_insert("key7","value7");
+        BPlusTree<String, String> bPlusTree = new BPlusTree<>(3);
+        for (int i = 0; i < 50; i++) {
+            String s = Strings.padStart(String.valueOf(i), 3, '0');
+            bPlusTree.BPlusTree_insert("key" + s, "value" + s);
+        }
+        System.exit(0);
     }
 
     @Test
-    public void sort(){
+    public void sort() {
         String[] a = {"1"};
         Arrays.sort(a);
     }

@@ -4,6 +4,7 @@
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="jquery.nestable.js"></script>
     <script type="text/javascript" src="js/handlebars-v4.0.5.js"></script>
+    <script type="text/javascript" src="js/underscore.js"></script>
     <link rel="stylesheet" type="text/css" href="jquery.nestable.css"/>
     <script id="filelist-template" type="text/x-handlebars-template">
         <thead>
@@ -20,8 +21,10 @@
         <tr class="data-row">
             <td class="filename">{{filename}}</td>
             <td>未处理</td>
-            <td><button class="process">处理</button></td>
-            <td class="t_id"><input type="text"/></td>
+            <td>
+                <button class="process">处理</button>
+            </td>
+            <td class="t_id"><input type="text" class="t_id"/></td>
             <td class="query_t_id">
                 <button class="query">查询</button>
             </td>
@@ -35,55 +38,56 @@
 
 </table>
 
-<label for="tId">tId:</label> <input typ="text" id="tId">
-<button id="query">查询</button>
-<br>
 <div class="cf nestable-lists">
     <div class="dd" id="callstack"></div>
 </div>
 
 <script>
     $('#callstack').nestable({/* config options */});
-    $("#query").on('click', function () {
-        var data = {tId: $("#tId").val()};
-        if (data.tId == "" || data.tId == null) {
-            alert("please input the tId.");
-        }
-        $.get("http://localhost:8080/tree", data, function (htmlStr) {
-            $('#callstack').html(htmlStr);
-            $('#callstack').nestable('init');
-        });
-    });
 
-    function bindTableEvent(){
-        $("#fileList").on('click','button.process',function (event) {
+    function bindTableEvent() {
+        $("#fileList").on('click', 'button.process', function (event) {
             var _td = $(this).closest('tr').find(".filename");
             var filename = _td.text();
-            $.get("http://localhost:8080/buildIndex",{filename:filename},function () {
+            $.get("http://localhost:8080/buildIndex", {filename: filename}, function () {
 
             });
         });
 
-        $("#fileList").on('click','button.query',function (event) {
-            var _td = $(this).closest('tr').find(".filename");
-            var filename = _td.text();
+        $("#fileList").on('click', 'button.query', function (event) {
+            var _tr = $(this).closest('tr');
+            var filename = _tr.find(".filename").text();
+            var t_id = _tr.find("input.t_id").val();
+            if (_.isEmpty(t_id) || _.isEmpty(filename)) {
+                alert("please input the tId.");
+                return;
+            }
+            $.get("http://localhost:8080/tree", {filename: filename, tId: t_id}, function (htmlStr) {
+                $('#callstack').html(htmlStr);
+                $('#callstack').nestable('init');
+            });
         });
     }
 
-    $(function () {
+
+    var initDir = function(){
         $.get("http://localhost:8080/directory", function (filelist) {
             if ($.isArray(filelist)) {
                 var source = $("#filelist-template").html();
                 var template = Handlebars.compile(source);
                 var rows = [];
-                $.each(filelist,function (index,value) {
-                    rows.push({filename:value});
+                $.each(filelist, function (index, value) {
+                    rows.push({filename: value});
                 })
-                var context = {rows:rows};
+                var context = {rows: rows};
                 var html = template(context);
                 $("#fileList").html(html);
             }
         });
+    };
+
+    $(function () {
+        initDir();
         bindTableEvent();
     });
 

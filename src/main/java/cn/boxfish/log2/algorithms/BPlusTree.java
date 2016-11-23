@@ -97,14 +97,14 @@ public class BPlusTree<K extends Comparable<K>, V> {
                 K greatestKey = (K) leftSibling.getGreatestKey();
                 Node childOfLeftSibling = leftSibling.getChild(leftSibling.numberOfKeys());
                 //更新左孩子
-                childOfLeftSibling.removeKey(leftSibling.numberOfKeys() - 1);
-                childOfLeftSibling.removeChild(leftSibling.numberOfChildren() - 1);
+                childOfLeftSibling.removeKeyAt(leftSibling.numberOfKeys() - 1);
+                childOfLeftSibling.removeChildAt(leftSibling.numberOfChildren() - 1);
                 //更新父索引
-                parent.replaceKey(indexOfChild - 1, greatestKey);
+                parent.replaceKeyAt(indexOfChild - 1, greatestKey);
                 //更新自己
                 node.addKey(entry);
                 //把child放在什么位置
-                node.insertChild(0, childOfLeftSibling);
+                node.insertChildAt(0, childOfLeftSibling);
                 return;
             } else {
                 Node rightSibling = getRightSibling(node);
@@ -117,24 +117,24 @@ public class BPlusTree<K extends Comparable<K>, V> {
                     K leastKey = (K) rightSibling.getKey(0);
                     Node childOfRightSibling = rightSibling.getChild(0);
                     //更新右孩子
-                    childOfRightSibling.removeKey(0);
-                    childOfRightSibling.removeChild(0);
+                    childOfRightSibling.removeKeyAt(0);
+                    childOfRightSibling.removeChildAt(0);
                     //更新父索引
-                    parent.replaceKey(indexOfChild, leastKey);
+                    parent.replaceKeyAt(indexOfChild, leastKey);
                     //更新自己
                     node.addKey(entry);
                     //把child放在什么位置
-                    node.insertChild(node.numberOfChildren(), childOfRightSibling);
+                    node.insertChildAt(node.numberOfChildren(), childOfRightSibling);
                     return;
                 }
 
-                // Can't borrow from neighbors, try to combined with left neighbor
+                // Can't borrow from neighbors, try to combine with left neighbor
                 if (leftSibling != null) {
                     Node parent = node.parent;
                     int indexOfChild = parent.indexOfChild(node);
                     K entry = (K) parent.getKey(indexOfChild - 1);
 
-                    parent.removeKey(indexOfChild - 1);
+                    parent.removeKeyAt(indexOfChild - 1);
 
                     leftSibling.addKey(entry);
                     leftSibling.addKeys(node.keys, node.numberOfKeys());
@@ -146,13 +146,13 @@ public class BPlusTree<K extends Comparable<K>, V> {
                     }
                     return;
                 }
-                // Can't borrow from neighbors, try to combined with right neighbor
+                // Can't borrow from neighbors, try to combine with right neighbor
                 if (rightSibling != null) {
                     Node parent = node.parent;
                     int indexOfChild = parent.indexOfChild(node);
                     K entry = (K) parent.getKey(indexOfChild);
 
-                    parent.removeKey(indexOfChild);
+                    parent.removeKeyAt(indexOfChild);
 
                     node.addKey(entry);
                     node.addKeys(rightSibling.keys, rightSibling.numberOfKeys());
@@ -177,7 +177,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         if (combinedNode.numberOfKeys() < minKeySize) {
             LeafNode leftSibling = (LeafNode) getLeftSibling(combinedNode);
             if (leftSibling != null && leftSibling.numberOfKeys() > minKeySize) {
-                //borrow from left neighbor;
+                //borrow data from left neighbor;
                 DataElement dataElement = leftSibling.getDataElement(leftSibling.numberOfKeys() - 1);
                 leftSibling.remove(dataElement.key);
                 combinedNode.addDataElement(dataElement);
@@ -186,12 +186,12 @@ public class BPlusTree<K extends Comparable<K>, V> {
                 Node parent = combinedNode.parent;
                 int indexOfChild = parent.indexOfChild(combinedNode);
                 int indexOfKey = indexOfChild - 1;
-                parent.replaceKey(indexOfKey, greatestKey);
+                parent.replaceKeyAt(indexOfKey, greatestKey);
                 return;
             } else {
                 LeafNode rightSibling = (LeafNode) getRightSibling(combinedNode);
                 if (rightSibling != null && rightSibling.numberOfKeys() > minKeySize) {
-                    //borrow from right neighbor;
+                    //borrow data from right neighbor;
                     DataElement dataElement = rightSibling.getDataElement(0);
                     rightSibling.remove(dataElement.key);
                     combinedNode.addDataElement(dataElement);
@@ -200,7 +200,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
                     Node parent = combinedNode.parent;
                     int indexOfChild = parent.indexOfChild(combinedNode);
                     int indexOfKey = indexOfChild;//因为借的兄弟不同,更新的索引位置也不相同
-                    parent.replaceKey(indexOfKey, greatestKey);
+                    parent.replaceKeyAt(indexOfKey, greatestKey);
                     return;
                 }
 
@@ -221,7 +221,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
                 if (rightSibling != null) {
                     Node parent = combinedNode.parent;
                     int indexOfChild = parent.indexOfChild(combinedNode);
-                    parent.shiftKeys(indexOfChild + 1);
+                    parent.shiftKeys(indexOfChild);
                     combinedNode.addNode(rightSibling);
                     parent.shiftChildren(indexOfChild + 1);
 
@@ -243,6 +243,9 @@ public class BPlusTree<K extends Comparable<K>, V> {
         if (index < 0) {
             return null;
         }
+        if (index >= parent.numberOfChildren()) {
+            return null;
+        }
         return parent.getChild(index + 1);
     }
 
@@ -252,7 +255,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         }
         Node parent = node.parent;
         int index = parent.indexOfChild(node);
-        if (index < 0) {
+        if (index <= 0) {
             return null;
         }
         return parent.getChild(index - 1);
@@ -268,7 +271,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
             LeafNode dataNode = findDataNode(root, k);
             dataNode.add(k, v);
             if (dataNode.numberOfKeys() > maxKeySize) {
-                splitLeafNode(dataNode);
+                split(dataNode);
             }
         }
     }
@@ -278,68 +281,64 @@ public class BPlusTree<K extends Comparable<K>, V> {
      *
      * @param nodeToSplit
      */
-    private void splitInternalNode(Node nodeToSplit) {
-        int numberOfKeys = nodeToSplit.numberOfKeys();
-        int medialIndex = numberOfKeys / 2;//TODO
-        K medialKey = (K) (nodeToSplit.getKey(medialIndex));
-
-        Node left = new Node(maxKeySize, maxChildrenSize, null);
-        for (int i = 0; i < medialIndex; i++) {//// TODO: 2016/11/21 这里不能<=medialIndex?加上等号之后,无法分配孩子节点。
-            left.addKey(nodeToSplit.getKey(i));
-        }
-
-        Node right = new Node(maxKeySize, maxChildrenSize, null);
-        for (int i = medialIndex + 1; i < numberOfKeys; i++) {
-            right.addKey(nodeToSplit.getKey(i));
-        }
-
-        Node parentOfNodeToSplit;
-        if (nodeToSplit.parent == null) {
-            parentOfNodeToSplit = new Node(maxKeySize, maxChildrenSize, null);
-            root = parentOfNodeToSplit;
-        } else {
-            parentOfNodeToSplit = nodeToSplit.parent;
-        }
-        left.parent = parentOfNodeToSplit;
-        right.parent = parentOfNodeToSplit;
-        parentOfNodeToSplit.addChild(left);
-        parentOfNodeToSplit.addChild(right);
-        parentOfNodeToSplit.addKey(medialKey);
-        if (parentOfNodeToSplit.numberOfKeys() > maxKeySize) {
-            splitInternalNode(parentOfNodeToSplit);
-        }
-    }
-
-    private void splitLeafNode(LeafNode nodeToSplit) {
+    private void split(Node nodeToSplit) {
         int numberOfKeys = nodeToSplit.numberOfKeys();
         int medialIndex = numberOfKeys / 2;
         K medialKey = (K) (nodeToSplit.getKey(medialIndex));
 
-        LeafNode left = new LeafNode(maxKeySize, null);
-        for (int i = 0; i <= medialIndex; i++) {
-            left.addDataElement(nodeToSplit.getDataElement(i));
-        }
+        Node left;
+        Node right;
+        if (nodeToSplit.isLeaf()) {
+            left = new LeafNode(maxKeySize, null);
+            for (int i = 0; i <= medialIndex; i++) {
+                ((LeafNode) left).addDataElement(((LeafNode) nodeToSplit).getDataElement(i));
+            }
 
-        LeafNode right = new LeafNode(maxKeySize, null);
-        for (int i = medialIndex + 1; i < numberOfKeys; i++) {
-            right.addDataElement(nodeToSplit.getDataElement(i));
-        }
+            right = new LeafNode(maxKeySize, null);
+            for (int i = medialIndex + 1; i < numberOfKeys; i++) {
+                ((LeafNode) right).addDataElement(((LeafNode) nodeToSplit).getDataElement(i));
+            }
 
-        Node parentOfNodeToSplit;
-        if (nodeToSplit.parent == null) {
-            parentOfNodeToSplit = new Node(maxKeySize, maxChildrenSize, null);
-            root = parentOfNodeToSplit;
         } else {
-            parentOfNodeToSplit = nodeToSplit.parent;
+            left = new Node(maxKeySize, maxChildrenSize, null);
+            for (int i = 0; i < medialIndex; i++) {// TODO: 2016/11/21 这里不能<=medialIndex?加上等号之后,无法分配孩子节点。
+                left.addKey(nodeToSplit.getKey(i));
+            }
+
+            right = new Node(maxKeySize, maxChildrenSize, null);
+            for (int i = medialIndex + 1; i < numberOfKeys; i++) {
+                right.addKey(nodeToSplit.getKey(i));
+            }
+
         }
-        left.parent = parentOfNodeToSplit;
-        right.parent = parentOfNodeToSplit;
-        parentOfNodeToSplit.addChild(left);
-        parentOfNodeToSplit.addChild(right);
-        parentOfNodeToSplit.addKey(medialKey);
-        if (parentOfNodeToSplit.numberOfKeys() > maxKeySize) {
-            splitInternalNode(parentOfNodeToSplit);
+
+        Node parent;
+        if (nodeToSplit.parent == null) {
+            parent = new Node(maxKeySize, maxChildrenSize, null);
+
+            left.parent = parent;
+            right.parent = parent;
+            parent.addChild(left);
+            parent.addChild(right);
+            parent.addKey(medialKey);
+
+            root = parent;
+        } else {
+            parent = nodeToSplit.parent;
+
+            int indexOfChild = parent.indexOfChild(nodeToSplit);
+            parent.insertKeyAt(indexOfChild, medialKey);
+            //把一个子节点分割成两个子节点
+            parent.insertChildAt(indexOfChild, left);
+            left.parent = parent;
+            parent.replaceChildAt(indexOfChild + 1, right);
+            right.parent = parent;
+
+            if (parent.numberOfKeys() > maxKeySize) {
+                split(parent);
+            }
         }
+
     }
 
     private static class Node<K extends Comparable<K>> {
@@ -351,6 +350,14 @@ public class BPlusTree<K extends Comparable<K>, V> {
 
         Node() {
 
+        }
+
+        Node(int maxKeySize, int maxChildrenSize, Node parent) {
+            this.parent = parent;
+            keys = (K[]) new Comparable[maxKeySize + 1];
+            this.keysSize = 0;
+            children = new Node[maxChildrenSize + 1];
+            this.childrenSize = 0;
         }
 
         /**
@@ -372,11 +379,11 @@ public class BPlusTree<K extends Comparable<K>, V> {
             keysSize--;
         }
 
-        public void removeKey(int index) {
+        public void removeKeyAt(int index) {
             shiftKeys(index);
         }
 
-        public void removeChild(int index) {
+        public void removeChildAt(int index) {
             shiftChildren(index);
         }
 
@@ -397,20 +404,14 @@ public class BPlusTree<K extends Comparable<K>, V> {
             for (int i = 0; i < keysSize; i++) {
                 this.keys[this.keysSize + i] = keys[i];
             }
+            this.keysSize += keysSize;
         }
 
         public void addChildren(Node[] children, int childrenSize) {
             for (int i = 0; i < childrenSize; i++) {
                 this.children[this.childrenSize + i] = children[i];
             }
-        }
-
-        Node(int maxKeySize, int maxChildrenSize, Node parent) {
-            this.parent = parent;
-            keys = (K[]) new Comparable[maxKeySize];
-            this.keysSize = 0;
-            children = new Node[maxChildrenSize];
-            this.childrenSize = 0;
+            this.childrenSize += childrenSize;
         }
 
         public K getGreatestKey() {
@@ -429,14 +430,27 @@ public class BPlusTree<K extends Comparable<K>, V> {
             node.parent = this;
         }
 
-        public void insertChild(int index, Node node) {
+        public void insertChildAt(int index, Node node) {
             for (int i = childrenSize; i > index; i--) {
                 children[i] = children[i - 1];
             }
             children[index] = node;
+            childrenSize++;
         }
 
-        public void replaceKey(int index, K k) {
+        public void insertKeyAt(int index, K k) {
+            for (int i = keysSize; i > index; i--) {
+                keys[i] = keys[i - 1];
+            }
+            keys[index] = k;
+            keysSize++;
+        }
+
+        public void replaceChildAt(int index, Node node) {
+            children[index] = node;
+        }
+
+        public void replaceKeyAt(int index, K k) {
             keys[index] = k;
         }
 
@@ -478,7 +492,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
 
         LeafNode(int maxKeySize, Node parent) {
             super.parent = parent;
-            keyAndValues = new DataElement[maxKeySize];
+            keyAndValues = new DataElement[maxKeySize + 1];
             super.keysSize = 0;
             childrenSize = 0;
         }
@@ -504,28 +518,25 @@ public class BPlusTree<K extends Comparable<K>, V> {
         }
 
         public Vector<V> remove(K k) {
-            DataElement[] newDataElements = new DataElement[keyAndValues.length];
             int index = 0;
-            Vector<V> valuesTodelete = null;
+            Vector<V> valuesToDelete = null;
             for (int i = 0; i < keysSize; i++) {
                 if (keyAndValues[i].key.compareTo(k) == 0) {
                     //remove this element
                     index = i;
-                    valuesTodelete = keyAndValues[i].values;
+                    valuesToDelete = keyAndValues[i].values;
                     break;
                 }
                 return null;
             }
-            for (int i = 0; i < index; i++) {
-                newDataElements[i] = keyAndValues[i];
+
+            for (int i = index; i < keyAndValues.length - 1; i++) {
+                keyAndValues[i] = keyAndValues[i + 1];
             }
-            for (int i = index + 1; i < keyAndValues.length; i++) {
-                newDataElements[i - 1] = keyAndValues[i];
-            }
-            keyAndValues = newDataElements;
+            keyAndValues[keyAndValues.length - 1] = null;
             keysSize--;
 
-            return valuesTodelete;
+            return valuesToDelete;
         }
 
         public DataElement getDataElement(int index) {
@@ -571,7 +582,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
 
         @Override
         public int compareTo(DataElement o) {
-            return key.compareTo((K)o.key);
+            return key.compareTo((K) o.key);
         }
     }
 }
