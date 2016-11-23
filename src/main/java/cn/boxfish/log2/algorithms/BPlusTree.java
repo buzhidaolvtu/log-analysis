@@ -59,18 +59,34 @@ public class BPlusTree<K extends Comparable<K>, V> {
             } else {
                 //寻找数据节点LeafNode
                 LeafNode dataNode = findDataNode(root, k);
+                if (dataNode.numberOfKeys() > maxKeySize){
+                    logger.error("");//todo
+                }
                 dataNode.add(k, v);
                 if (dataNode.numberOfKeys() > maxKeySize) {
                     split(dataNode);
                 }
             }
-
         } catch (Exception e) {
             logger.error("key:{},value:{}", k, v);
             throw e;
         }
     }
 
+    public int treeHeight() {
+        if (root == null) return 0;
+        Node node = root;
+        int height = 0;
+        while (node != null) {
+            height++;
+            if (node.numberOfChildren() > 0) {
+                node = node.getChildAt(0);
+                continue;
+            }
+            break;
+        }
+        return height;
+    }
 
     private LeafNode findDataNode(Node startNode, K k) {
         Node node = startNode;
