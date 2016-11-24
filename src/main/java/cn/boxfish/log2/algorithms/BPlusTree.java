@@ -59,8 +59,8 @@ public class BPlusTree<K extends Comparable<K>, V> {
             } else {
                 //寻找数据节点LeafNode
                 LeafNode dataNode = findDataNode(root, k);
-                if (dataNode.numberOfKeys() > maxKeySize){
-                    logger.error("");//todo
+                if (dataNode.numberOfKeys() > maxKeySize) {
+                    logger.error("error array index out of bound. {},{}", dataNode.getKeyAt(0), dataNode.getGreatestKey());
                 }
                 dataNode.add(k, v);
                 if (dataNode.numberOfKeys() > maxKeySize) {
@@ -96,14 +96,18 @@ public class BPlusTree<K extends Comparable<K>, V> {
                 return ((LeafNode) node);
             }
 
+            //key比最大的索引值还大
+            K greatestKey = (K) node.getGreatestKey();
+            if (k.compareTo(greatestKey) > 0) {
+                node = node.getChildAt(node.numberOfChildren() - 1);
+                continue label1;
+            }
+
             for (int i = 0; i < node.numberOfKeys(); i++) {
                 if (k.compareTo((K) node.getKeyAt(i)) <= 0) {
                     node = node.getChildAt(i);
                     continue label1;
                 }
-                //执行到这里说明:key比最大的索引值还大
-                node = node.getChildAt(node.numberOfChildren() - 1);
-                continue label1;
             }
         }
 
