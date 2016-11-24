@@ -45,23 +45,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="BPlusTree.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BPlusTree.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/cn/boxfish/log2/algorithms/BPlusTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="105" column="45" selection-start-line="105" selection-start-column="45" selection-end-line="105" selection-end-column="45" />
+            <state relative-caret-position="175">
+              <caret line="347" column="29" selection-start-line="347" selection-start-column="29" selection-end-line="347" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#17058#17059#0" expanded="true" />
+                <element signature="e#17104#17105#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BPlusTreeTest.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ReflectiveCallable.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="216">
+              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BPlusTreeTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/cn/boxfish/log2/algorithms/BPlusTreeTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="30" column="60" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="60" />
+            <state relative-caret-position="75">
+              <caret line="29" column="34" selection-start-line="29" selection-start-column="34" selection-end-line="29" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -533,8 +545,8 @@
         <option value="$PROJECT_DIR$/src/main/java/cn/boxfish/log2/utils/ResourceUtils.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/java/cn/boxfish/log2/search/BuildIndex.java" />
-        <option value="$PROJECT_DIR$/src/test/java/cn/boxfish/log2/algorithms/BPlusTreeTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/boxfish/log2/algorithms/BPlusTree.java" />
+        <option value="$PROJECT_DIR$/src/test/java/cn/boxfish/log2/algorithms/BPlusTreeTest.java" />
       </list>
     </option>
   </component>
@@ -1339,7 +1351,7 @@
       <workItem from="1479534529703" duration="37744000" />
       <workItem from="1479778050474" duration="26337000" />
       <workItem from="1479864233162" duration="23599000" />
-      <workItem from="1479950630644" duration="1371000" />
+      <workItem from="1479950630644" duration="8440000" />
     </task>
     <task id="LOCAL-00001" summary="日志分析">
       <created>1478940145287</created>
@@ -1481,43 +1493,50 @@
       <option name="project" value="LOCAL" />
       <updated>1479898848663</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="BPlusTree">
+      <created>1479952015498</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1479952015498</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.23 at 18h 40m 01s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 39m 00s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.23 at 18h 40m 59s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 40m 20s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.23 at 18h 45m 15s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 43m 26s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.23 at 18h 49m 39s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 43m 42s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.23 at 19h 00m 23s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 44m 02s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 09h 30m 47s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 47m 58s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 09h 35m 19s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 49m 03s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 09h 37m 15s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 49m 13s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 09h 37m 54s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 49m 23s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 09h 46m 23s.xml">
+    <history-entry file="BPlusTreeTest_BPlusTree_insert - 2016.11.24 at 23h 49m 38s.xml">
       <configuration name="BPlusTreeTest.BPlusTree_insert" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="210367000" />
+    <option name="totallyTimeSpent" value="217436000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1529,7 +1548,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="823" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="823" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1552,7 +1571,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46785226" sideWeight="0.49713877" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35430917" sideWeight="0.49713877" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1585,7 +1604,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="55" />
+      <option name="time" value="63" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1865,14 +1884,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/src.zip!/java/lang/Comparable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
@@ -1914,6 +1925,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2054,21 +2066,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/cn/boxfish/log2/algorithms/BPlusTreeTest.java">
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="30" column="60" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="60" />
+        <state relative-caret-position="216">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/boxfish/log2/algorithms/BPlusTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="105" column="45" selection-start-line="105" selection-start-column="45" selection-end-line="105" selection-end-column="45" />
+        <state relative-caret-position="175">
+          <caret line="347" column="29" selection-start-line="347" selection-start-column="29" selection-end-line="347" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#17058#17059#0" expanded="true" />
+            <element signature="e#17104#17105#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/cn/boxfish/log2/algorithms/BPlusTreeTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="29" column="34" selection-start-line="29" selection-start-column="34" selection-end-line="29" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>

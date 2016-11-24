@@ -342,7 +342,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
             }
 
             for (int i = 0; i <= medialIndex; i++) {
-                left.addChild(nodeToSplit.getChildAt(0));
+                left.addChild(nodeToSplit.getChildAt(i));
             }
 
             right = new Node(maxKeySize, maxChildrenSize, null);
@@ -362,9 +362,9 @@ public class BPlusTree<K extends Comparable<K>, V> {
 
             left.parent = parent;
             right.parent = parent;
+            parent.addKey(medialKey);
             parent.addChild(left);
             parent.addChild(right);
-            parent.addKey(medialKey);
 
             root = parent;
         } else {
@@ -391,6 +391,16 @@ public class BPlusTree<K extends Comparable<K>, V> {
         protected int keysSize;
         private Node[] children;
         protected int childrenSize;
+
+        @Override
+        public String toString() {
+            StringBuffer sb = new StringBuffer();
+            for(int i=0;i<keysSize;i++){
+                sb.append(keys[i]);
+                sb.append(" ");
+            }
+            return sb.toString();
+        }
 
         Node() {
 
@@ -541,6 +551,16 @@ public class BPlusTree<K extends Comparable<K>, V> {
             childrenSize = 0;
         }
 
+        @Override
+        public String toString() {
+            StringBuffer sb = new StringBuffer();
+            for(int i=0;i<keysSize;i++){
+                sb.append(keyAndValues[i].key);
+                sb.append(" ");
+            }
+            return sb.toString();
+        }
+
         public void add(K k, V v) {
             for (int index = 0; index < keysSize; index++) {
                 if (keyAndValues[index].key.compareTo(k) == 0) {
@@ -628,5 +648,35 @@ public class BPlusTree<K extends Comparable<K>, V> {
         public int compareTo(DataElement o) {
             return key.compareTo((K) o.key);
         }
+    }
+
+    //前序遍历
+    public String printTree() {
+        if (root == null) return "";
+        Node node = root;
+        int cycle = 0;
+        return "\n"+printTree(node,cycle);
+    }
+
+    private String printTree(Node node, int cycle) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(prefix(cycle));
+        sb.append(node.toString());
+        sb.append("\n");
+
+        cycle++;
+        for (int i = 0; i < node.numberOfChildren(); i++) {
+            sb.append(printTree(node.getChildAt(i), cycle));
+        }
+
+        return sb.toString();
+    }
+
+    private String prefix(int cycle) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < cycle; i++) {
+            sb.append("-");
+        }
+        return sb.toString();
     }
 }

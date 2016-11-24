@@ -26,14 +26,17 @@ public class BPlusTreeTest {
 
     @Test
     public void BPlusTree_insert() throws Exception {
-        BPlusTree<String, String> bPlusTree = new BPlusTree<>(100);
-        for (int i = 0; i < 1000000; i++) {
+        BPlusTree<String, String> bPlusTree = new BPlusTree<>(10);
+        for (int i = 0; i < 100000; i++) {
+            if(i==6){
+                logger.info("");
+            }
             String s = Strings.padStart(String.valueOf(i), 1, '0');
             String key = "key" + s;
             String value = "value" + s;
-//            logger.info("key:{},value:{}",key,value);
             bPlusTree.BPlusTree_insert(key, value);
         }
+        logger.info(bPlusTree.printTree());
         logger.info("height of tree is : {}", bPlusTree.treeHeight());
         System.exit(0);
     }
