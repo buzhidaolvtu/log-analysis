@@ -1,10 +1,10 @@
 package cn.boxfish.log2.controller;
 
 import cn.boxfish.log2.analysis.Analysis;
+import cn.boxfish.log2.search.BuildIndex;
 import cn.boxfish.log2.service.FileNameServiceImpl;
 import cn.boxfish.log2.service.directory.Directory;
 import cn.boxfish.log2.storage.LabelAndStoreLog;
-import cn.boxfish.log2.utils.UncompressUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +32,8 @@ public class TimelineController {
     @Autowired
     private LabelAndStoreLog labelAndStoreLog;
 
+    private BuildIndex buildIndex;
+
     @RequestMapping(value = "/tree")
     public String tree(String filename, String tId) {
         String fullpathName = dir + "/" + filename;
@@ -43,8 +45,9 @@ public class TimelineController {
     public String buildIndex(String filename) {
         String fullpathName = dir + "/" + filename;
         File file = new File(fullpathName);
-        String fileIdAsCollectionName = fileNameService.fileId(fullpathName);
-        labelAndStoreLog.transform(UncompressUtils.uncompress(file), fileIdAsCollectionName);
+        buildIndex= new BuildIndex(file);
+        buildIndex.addIndex("userId");
+
         return "success";
     }
 

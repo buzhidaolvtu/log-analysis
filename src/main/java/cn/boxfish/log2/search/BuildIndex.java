@@ -1,8 +1,8 @@
 package cn.boxfish.log2.search;
 
+import cn.boxfish.log2.algorithms.BPlusTree;
 import cn.boxfish.log2.utils.ResourceUtils;
 import com.google.common.base.Verify;
-import com.jwetherell.algorithms.data_structures.BTree;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,8 +20,7 @@ public class BuildIndex {
         this.file = file;
     }
 
-    //TODO
-    private BTree<Node> indexTree = new BTree<>(50);
+    private BPlusTree<String, String> indexTree = new BPlusTree<>(50);
 
     public void addIndex(String key) {
         BufferedReader bufferedReader = null;
@@ -29,9 +28,8 @@ public class BuildIndex {
             bufferedReader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                if(line.contains(key)){
-                    //TODO
-                    indexTree.add(new Node(key,line));
+                if (line.contains(key)) {
+                    indexTree.insert(key, line);
                 }
             }
         } catch (Exception e) {
@@ -41,33 +39,4 @@ public class BuildIndex {
         }
     }
 
-    static class Node implements  Comparable<Node>{
-        private String key;
-        private String value;
-
-        Node(String key,String value){
-            this.key = key;
-            this.value = value;
-        }
-        public String getKey() {
-            return key;
-        }
-
-        public void setKey(String key) {
-            this.key = key;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            return key.compareTo(o.key);
-        }
-    }
 }

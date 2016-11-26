@@ -24,10 +24,6 @@ public class BPlusTree<K extends Comparable<K>, V> {
 
     private Node root;
 
-    public BPlusTree() {
-
-    }
-
     public BPlusTree(int order) {
         //TODO
         this.minKeySize = order;
@@ -36,7 +32,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         this.maxChildrenSize = maxKeySize + 1;
     }
 
-    public Vector<V> BPlusTree_search(K k) {
+    public Vector<V> search(K k) {
         if (root == null) {
             return null;
         }
@@ -50,7 +46,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         }
     }
 
-    public void BPlusTree_insert(K k, V v) {
+    public void insert(K k, V v) {
         try {
             if (root == null) {
                 LeafNode<K, V> leafNode = new LeafNode<K, V>(maxKeySize, null);
@@ -115,7 +111,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
     }
 
     //删除索引是k的数据
-    public Vector<V> BPlusTree_delete(K k) {
+    public Vector<V> delete(K k) {
         if (root == null) {
             return null;
         }
