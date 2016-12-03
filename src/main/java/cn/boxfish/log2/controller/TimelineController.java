@@ -47,7 +47,6 @@ public class TimelineController {
         File file = new File(fullpathName);
         buildIndex= new BuildIndex(file);
         buildIndex.addIndex("userId");
-
         return "success";
     }
 
